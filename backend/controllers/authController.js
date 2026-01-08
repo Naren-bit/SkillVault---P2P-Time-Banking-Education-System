@@ -42,24 +42,39 @@ const authController = {
                 'Welcome bonus credits'
             );
 
+            // Reload user to get updated credit balance
+            const updatedUser = await User.findById(user._id);
+
             // Generate token
-            const token = user.generateAuthToken();
+            const token = updatedUser.generateAuthToken();
 
             // Update last login
-            user.lastLogin = new Date();
-            await user.save();
+            updatedUser.lastLogin = new Date();
+            await updatedUser.save();
 
             res.status(201).json({
                 success: true,
                 data: {
                     user: {
-                        id: user._id,
-                        email: user.email,
-                        firstName: user.firstName,
-                        lastName: user.lastName,
-                        fullName: user.fullName,
-                        creditBalance: user.creditBalance,
-                        avatar: user.avatar
+                        id: updatedUser._id,
+                        _id: updatedUser._id,
+                        email: updatedUser.email,
+                        firstName: updatedUser.firstName,
+                        lastName: updatedUser.lastName,
+                        fullName: updatedUser.fullName,
+                        creditBalance: updatedUser.creditBalance,
+                        avatar: updatedUser.avatar,
+                        bio: updatedUser.bio || '',
+                        teachingSkills: updatedUser.teachingSkills || [],
+                        learningInterests: updatedUser.learningInterests || [],
+                        stats: updatedUser.stats || {
+                            totalSessionsTaught: 0,
+                            totalSessionsLearned: 0,
+                            totalHoursTaught: 0,
+                            totalHoursLearned: 0,
+                            averageRating: 0,
+                            totalRatings: 0
+                        }
                     },
                     token
                 }
@@ -117,6 +132,7 @@ const authController = {
                 data: {
                     user: {
                         id: user._id,
+                        _id: user._id,
                         email: user.email,
                         firstName: user.firstName,
                         lastName: user.lastName,
@@ -157,6 +173,7 @@ const authController = {
                 data: {
                     user: {
                         id: user._id,
+                        _id: user._id,
                         email: user.email,
                         firstName: user.firstName,
                         lastName: user.lastName,
